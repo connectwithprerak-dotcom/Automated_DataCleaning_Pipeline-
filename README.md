@@ -26,21 +26,39 @@ An ETL workflow built using n8n to clean, validate, and route customer data from
 
 ## Architecture
 
-(Add architecture diagram)
+n8n-data-cleaning-pipeline/
+│
+├── README.md
+├── LICENSE
+├── .gitignore
+│
+├── workflow/
+│   └── data-cleaning-workflow.json
+│
+├── sql/
+│   ├── create_tables.sql
+│   ├── sample_data.sql
+│   └── validation_queries.sql
+│
+├── dataset/
+│   └── sample_customers.csv
+│
+├── docs/
+│   ├── architecture.png
+│   ├── workflow.png
+│   └── screenshots/
+│
+└── images/
 
 ## Workflow
 
-(Add n8n workflow screenshot)
+<img width="460" height="196" alt="Screenshot 2026-07-19 at 9 15 39 PM" src="https://github.com/user-attachments/assets/e8e94052-48c5-4d7b-a816-9921df64cf9f" />
 
 ## Validation Rules
 
 - Name cannot be empty
 - Email must match regex
 - Phone contains digits only
-
-## Project Structure
-
-...
 
 ## Setup
 
