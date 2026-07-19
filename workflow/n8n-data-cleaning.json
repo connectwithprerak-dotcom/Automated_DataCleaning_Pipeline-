@@ -1,0 +1,379 @@
+{
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -608,
+        -272
+      ],
+      "id": "d03e169b-f7bb-4a67-8a11-2ed0f26d5a75",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "jsCode": "return items.map(item => {\n  item.json[\"name\"] = String(item.json[\"name\"] ?? \"\")\n    .trim()\n    .replace(/\\s+/g, \" \");\n\n  item.json.email = String(item.json.email ?? \"\")\n    .trim()\n    .toLowerCase();\n\n  item.json.phone = String(item.json.phone ?? \"\")\n    .replace(/\\D/g, \"\");\n\n  return item;\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -144,
+        -272
+      ],
+      "id": "99e202d1-6892-4aaa-b75c-c146368d0c7e",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "jsCode": "return items.map(item => {\n\n  const name = String(item.json[\"name\"] ?? \"\");\n  const email = String(item.json.email ?? \"\");\n  const phone = String(item.json.phone ?? \"\");\n\n  let errors = [];\n\n  // Name\n  if (name.trim().length === 0)\n    errors.push(\"Name is empty\");\n\n  // Email\n  if (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email.trim()))\n    errors.push(\"Invalid email\");\n\n  // Number\n  if (!/^\\d+$/.test(phone.replace(/\\D/g, \"\")))\n    errors.push(\"Number contains non-digits\");\n\n  item.json.record_valid = errors.length === 0;\n  item.json.error_reason = errors.join(\", \");\n\n  return item;\n\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        80,
+        -272
+      ],
+      "id": "1789c8b8-fb1c-4cac-8d7c-fdc01f9b5acc",
+      "name": "Code in JavaScript1"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1ZrywJ6oG_I9rSm5kYCaKNaW8R937WBJYtTEyJBarmBU",
+          "mode": "list",
+          "cachedResultName": "Test 1 ",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ZrywJ6oG_I9rSm5kYCaKNaW8R937WBJYtTEyJBarmBU/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 333738092,
+          "mode": "list",
+          "cachedResultName": "Pass",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ZrywJ6oG_I9rSm5kYCaKNaW8R937WBJYtTEyJBarmBU/edit#gid=333738092"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Name": "= {{ $json.name }}",
+            "Number": "= {{ $json.phone }}",
+            "Email": "= {{ $json.email }}",
+            "Validate ": "={{ $json.record_valid }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Number",
+              "displayName": "Number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Validate ",
+              "displayName": "Validate ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        480,
+        -400
+      ],
+      "id": "944b1fb4-5373-4eb1-99d7-01488d1b7a2d",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Rb3amumS4tKq9NN9",
+          "name": "Google Sheets account"
+        }
+      },
+      "notes": "Valid"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "999feb82-ab23-4131-856d-d46108d370b5",
+              "leftValue": "={{ $json.record_valid }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        288,
+        -272
+      ],
+      "id": "a602ca06-9cce-406a-9812-935840cbb7c3",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1ZrywJ6oG_I9rSm5kYCaKNaW8R937WBJYtTEyJBarmBU",
+          "mode": "list",
+          "cachedResultName": "Test 1 ",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ZrywJ6oG_I9rSm5kYCaKNaW8R937WBJYtTEyJBarmBU/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1328368702,
+          "mode": "list",
+          "cachedResultName": "Failed",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ZrywJ6oG_I9rSm5kYCaKNaW8R937WBJYtTEyJBarmBU/edit#gid=1328368702"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Number": "= {{ $json.phone }}",
+            "Name": "= {{ $json.name }}",
+            "Validate ": "={{ $json.record_valid }}",
+            "Email": "= {{ $json.email }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Number",
+              "displayName": "Number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Validate ",
+              "displayName": "Validate ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        480,
+        -160
+      ],
+      "id": "07f3c045-b4dd-4c59-9c39-6dc5e434cb0d",
+      "name": "Append row in sheet1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Rb3amumS4tKq9NN9",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO customers (name, number, email)\nVALUES ('{{ $json.Name }}', '{{ $json.Number }}','{{ $json.Email }}');",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        720,
+        -400
+      ],
+      "id": "aaa31983-54f7-42f0-bf4a-6ff1ac9711b9",
+      "name": "Execute a SQL query",
+      "credentials": {
+        "postgres": {
+          "id": "RG4lpDbWsprTyqow",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "Select * From NewData;",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -368,
+        -272
+      ],
+      "id": "c9dfa1e6-df68-477f-92dd-eded528a06d6",
+      "name": "Execute a SQL query2",
+      "credentials": {
+        "postgres": {
+          "id": "RG4lpDbWsprTyqow",
+          "name": "Postgres account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Execute a SQL query2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript1": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Execute a SQL query",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Append row in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet1": {
+      "main": [
+        []
+      ]
+    },
+    "Execute a SQL query": {
+      "main": [
+        []
+      ]
+    },
+    "Execute a SQL query2": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "6b0dc1a3403693b053773a7d3023b07d3048d343b670bc9404a4d9e5620aa86f"
+  }
+}
